@@ -1,9 +1,13 @@
-﻿#include "header_project1.h"
+﻿#include "cursor_visibility.h"
+#include "cursor_menu.h"
+#include "console_inactivity_timer.h"
+#include "input_check.h"
+#include "sorts.h"
+#include "header_project1.h"
 #include "header_project2.h"
 #include "project3.cpp"
-#include "sorts.h"
-#include "cursor_visibility.h"
-#include "cursor_menu.h"
+#include "project4.cpp"
+#include "project5.cpp"
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
@@ -19,42 +23,28 @@ std::cout << "Некорректный ввод. Введите информац
 SetConsoleTextAttribute(consoleColor, 7); 
 //#define DEBUG
 
-enum For_SecondaryMenu_Switch {
-    lab_showTask = 0,
-    lab_showTaskAndCopmplete = 1,
-    lab_returnToMainMenu = 2,
-    lab_endOfProgram = 3
-};
-enum For_mainProject2Menu_Switch {
-    project2_arrInitialization = 0,
-    project2_bubbleSort_a = 1,
-    project2_selectionSort_b = 2,
-    project2_insertionSort_c = 3,
-    project2_shellSort_d = 4,
-    project2_quickSort_e = 5,
-    project2_sequentialSearch = 6,
-    project2_binarySearch = 7,
-    project2_returnToSecondaryMenu = 8,
-    project2_endOfProgram = 9
-
-};
-enum For_mainProject3Menu_Switch {
-    project3_int_list = 0,
-    project3_string_list = 1,
-    project3_returnToSecondaryMenu = 2,
-    project3_endOfProgram = 3
-
-};
-
 int main() {
     setlocale(0, "ru");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
     HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+
+
+    std::thread timer(inactivity_timer, 60);
+    timer.detach();
+
+    enum For_SecondaryMenu_Switch { lab_showTask, lab_showTaskAndCopmplete, lab_returnToMainMenu, lab_endOfProgram };
+    enum For_mainProject2Menu_Switch { project2_arrInitialization, project2_bubbleSort_a, project2_selectionSort_b, project2_insertionSort_c, project2_shellSort_d, project2_quickSort_e, project2_sequentialSearch, project2_binarySearch, project2_returnToSecondaryMenu, project2_endOfProgram };
+    enum For_mainProject3Menu_Switch { project3_int_list, project3_string_list, project3_returnToSecondaryMenu, project3_endOfProgram };
+
 
     const std::string mainMenu[]{
         "Лабораторная работа №1 - scope of variables",
         "Лабораторная работа №2 - sorts",
         "Лабораторная работа №3 - lists",
-        "Лабораторная работа №4 - ...",
+        "Лабораторная работа №4 - Deque",
+        "Лабораторная работа №5 - Stack",
         "Выход из программы"
     };
     int mainMenuCount = sizeof(mainMenu) / sizeof(mainMenu[0]);
@@ -69,13 +59,12 @@ int main() {
 
     while (true) {
         hideCursor();
-        int choice = showMenu(".../mainMenu/", mainMenu, mainMenuCount);
-        switch (choice) {
+        int mainMenu_choice = showMenu(".../mainMenu/", mainMenu, mainMenuCount);
+        switch (mainMenu_choice) {
         case 0: { // Лабораторная работа №1
-            extern Batch* batches;
-            extern int batchCount;
+            bool shouldReturnToMainMenu = false;
 
-            while (true) {
+            while (!shouldReturnToMainMenu) {
                 int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
 
                 switch (secondaryChoice) {
@@ -105,21 +94,26 @@ int main() {
 
                     hideCursor();
 
-                    system("pause");
                     break;
                 }
                 case lab_returnToMainMenu: {
-                    goto mainMenu;
+                    shouldReturnToMainMenu = true;
+                    break;
                 }
                 case lab_endOfProgram: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
                     return 0;
                 }
+                default:
+                    break;
                 }
             }
+            break;
         }
         case 1: { // Лабораторная работа №2
-            while (true) {
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
                 int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
 
                 switch (secondaryChoice) {
@@ -160,7 +154,9 @@ int main() {
                     int* d = nullptr;
                     int* e = nullptr;
 
-                    while (true) {
+                    bool shouldReturnToSecondaryMenu = false;
+
+                    while (!shouldReturnToSecondaryMenu) {
                         int project2Choice = showMenu(".../mainMenu/secondaryMenu/mainProject2Menu/", mainProject2Menu, mainProject2MenuCount, true);
 
                         switch (project2Choice) {
@@ -197,13 +193,13 @@ int main() {
                             break;
                         }
                         case project2_bubbleSort_a: {
-                            std::cout << "\nВы выбрали: " << mainProject2Menu[project2Choice] << std::endl; 
+                            std::cout << "\nВы выбрали: " << mainProject2Menu[project2Choice] << std::endl;
 
                             if (!a) {
                                 std::cout << "\nСначала выполните инициализацию!\n" << std::endl;
                                 break;
                             }
-                            if (size <2) {
+                            if (size < 2) {
                                 std::cout << "\nСлишком мало элементов для сортировки!\n" << std::endl;
                                 open_binary_a = 0;
                                 break;
@@ -263,7 +259,7 @@ int main() {
                                 open_binary_c = 1;
                                 writeSortedArraysToFile("results.txt", a, b, c, d, e, size, "Массив c отсортирован методом вставки");
                                 break;
-                            }                           
+                            }
                         }
                         case project2_shellSort_d: {
                             std::cout << "\nВы выбрали: " << mainProject2Menu[project2Choice] << std::endl;
@@ -369,180 +365,102 @@ int main() {
                             if (open_binary_c == 1) std::cout << "Массив c: " << (binaryResults[2] ? "Найден" : "Не найден") << std::endl;
                             if (open_binary_d == 1) std::cout << "Массив d: " << (binaryResults[3] ? "Найден" : "Не найден") << std::endl;
                             if (open_binary_e == 1) std::cout << "Массив e: " << (binaryResults[4] ? "Найден" : "Не найден") << std::endl;
-                            
+
                             writeBinarySearchResultsToFile("results.txt", a, b, c, d, e, size, x, binaryResults);
                             break;
                         }
                         case project2_returnToSecondaryMenu: {
-                            goto project2MenuExit;
+
+                            shouldReturnToSecondaryMenu = true;
+                            break;
                         }
                         case project2_endOfProgram: {
                             std::cout << "\nВы выбрали: " << mainProject2Menu[project2Choice] << std::endl;
                             return 0;
                         }
+                        default:
+                            break;
                         }
-                        system("pause");
                     }
-                project2MenuExit:
-                    if (a) delete[] a;
-                    if (b) delete[] b;
-                    if (c) delete[] c;
-                    if (d) delete[] d;
-                    if (e) delete[] e;
-                    if (a_temp) delete[] a_temp;
-                    if (b_temp) delete[] b_temp;
-                    if (c_temp) delete[] c_temp;
-                    if (d_temp) delete[] d_temp;
-                    if (e_temp) delete[] e_temp;
-                    break;
                 }
                 case lab_returnToMainMenu: {
-                    goto mainMenu;
+                    shouldReturnToMainMenu = true;
+                    break;
                 }
                 case lab_endOfProgram: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
                     return 0;
                 }
+                default:
+                    break;
                 }
             }
             break;
         }
         case 2: { // Лабораторная работа №3
-            while (true) {
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
                 int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
 
                 switch (secondaryChoice) {
                 case lab_showTask: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
-                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать односвязный строковый список с помощью массива структур. Отсортировать элементы списка по возрастанию. Результирующий список вывести на экран.\n" << std::endl;
-                    system("pause");
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать односвязный строковый список с помощью массива структур. Отсортировать элементы списка по возрастанию. Результирующий список вывести на экран.\n" << std::endl; system("pause");
                     break;
                 }
                 case lab_showTaskAndCopmplete: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
-                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать односвязный строковый список с помощью массива структур. Отсортировать элементы списка по возрастанию. Результирующий список вывести на экран.\n" << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать односвязный строковый список с помощью массива структур. Отсортировать элементы списка по возрастанию. Результирующий список вывести на экран.\n" << std::endl;  system("pause");
+
+                    List<std::string> lst;
+                    std::string str;
+                    bool EndFlag = false;
+
+                    std::cout << "Введите элементы списка (для завершения введите 'end'):\n";
+
+                    while (!EndFlag) {
+                        std::cout << "Элемент " << lst.GetSize() + 1 << "  : ";
+                        filteredInput_letter_numbers(str);
+                        lst.push_back(str);
+                        if (str == "end") {
+                            EndFlag = true;
+                        }
+                    }
+
+                    std::cout << "\nЭЛЕМЕНТЫ ВАШЕГО СПИСКА ДО СОРТИРОВКИ:\n";
+                    for (int i = 0; i < lst.GetSize(); i++) {
+                        std::cout << i + 1 << " - элемент списка: " << lst[i] << "\n";
+                    }
+
+                    lst.bubbleSort();
+
+                    std::cout << "\nЭЛЕМЕНТЫ ВАШЕГО СПИСКА ПОСЛЕ СОРТИРОВКИ:\n";
+                    for (int i = 0; i < lst.GetSize(); i++) {
+                        std::cout << i + 1 << " - элемент списка: " << lst[i] << "\n";
+                    }
                     system("pause");
 
-                    const std::string mainProject3Menu[] = {
-                        "int list",
-                        "string list",
-                        "Вернуться в меню",
-                        "Выход из программы"
-                    };
-                    int mainProject3MenuCount = sizeof(mainProject3Menu) / sizeof(mainProject3Menu[0]);
-
-                    while (true) {
-                        int project3Choice = showMenu(".../mainMenu/secondaryMenu/mainProject3Menu/", mainProject3Menu, mainProject3MenuCount, true);
-
-                        switch (project3Choice) {
-                        case project3_int_list: {
-                            std::cout << "\nВы выбрали: " << mainProject3Menu[project3Choice] << std::endl;
-
-                            showCursor();
-
-                            Node<int> lst;
-                            std::string inputStr;
-
-                            std::cout << "Введите элементы списка (для завершения введите 'end'):\n";
-
-                            while (true) {
-                                std::cout << "Элемент " << lst.size + 1 << ": ";
-                                getline(std::cin, inputStr);
-
-                                if (inputStr.empty()) {
-                                    fastErrInfo;
-                                    continue;
-                                }
-
-                                bool isEnd = true;
-                                if (inputStr == "end") {
-                                    break;
-                                }
-                                else {
-                                    isEnd = false;
-                                }
-
-                                if (isEnd) {
-                                    break;
-                                }
-
-                                bool isValid = true;
-                                for (size_t i = 0; i < inputStr.size(); ++i) {
-                                    char c = inputStr[i];
-
-                                    if (!(c >= '0' && c <= '9')) {
-                                        if (c == '.') {
-                                            fastErrInfo;
-                                            isValid = false; 
-                                            break;
-                                        }
-
-                                        else if (c == ' ' && i > 0 && (inputStr[i - 1] >= '0' && inputStr[i - 1] <= '9')) {
-                                            fastErrInfo;
-                                            isValid = false;
-                                            break;
-                                        }
-                                        if (c == '-' && i == 0) {
-                                            isValid = true;
-                                            continue;
-                                        }
-                                        else if (c != ' ') {
-                                            fastErrInfo;
-                                            isValid = false;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (!isValid) continue;
-
-                                try {
-                                    int num = stoi(inputStr);
-                                    lst.push_back(num);
-                                }
-                                catch (...) {
-                                    std::cout << "Ошибка: введено число, выходящее за допустимые пределы." << std::endl;
-                                }
-                            }
-
-                            std::cout << "\nИсходный список:\n";
-                            lst.print();
-
-                            lst.bubbleSort();
-
-                            std::cout << "\nОтсортированный список:\n";
-                            lst.print();
-
-                            hideCursor();
-
-                            break;
-                            }
-                        case project3_returnToSecondaryMenu: {
-                            goto project3MenuExit;
-                        }
-                        case project3_endOfProgram: {
-                            std::cout << "\nВы выбрали: " << mainProject3Menu[project3Choice] << std::endl;
-                            return 0;
-                        }
-                        }
-                        system("pause");
-                    }
-                project3MenuExit:
                     break;
                 }
                 case lab_returnToMainMenu: {
-                    goto mainMenu;
+                    shouldReturnToMainMenu = true;
+                    break;
                 }
                 case lab_endOfProgram: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
                     return 0;
                 }
+                default:
+                    break;
                 }
             }
             break;
         }
         case 3: { // Лабораторная работа №4
-            while (true) {
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
                 int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
 
                 switch (secondaryChoice) {
@@ -553,33 +471,173 @@ int main() {
                     break;
                 }
                 case lab_showTaskAndCopmplete: {
-
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
                     std::cout << "\nНЕОБХОДИМО:\n\n19. Создать дек для целых (положительных и отрицательных) чисел. Максимальный размер дека вводится с экрана. Создать функции для ввода, вывода и определения размера дека. Ввести 3 элемента справа и 3 слева.  Вывести элементы дека справа до первого отрицательного (включительно). Вывести размер оставшегося дека.\n" << std::endl;
-                    showCursor();
+                    system("pause");
 
+                    bool dequeSizeController = false;
+                    unsigned dequeSize;
+                    int num, dqElementCounter = 0;
+                    Deque<int> dq;
+                    
+                    while (!dequeSizeController) {
+                        std::cout << "Введите максимальный размер дека: ";
+                        is_valid_number(dequeSize);
+                        std::cout << "\n";
+                        if (dequeSize == 0) {
+                            fastErrInfo;
+                        }
+                        else dequeSizeController = true;
+                    }
 
+                    std::cout << "Вводите элементы дека (в количестве '" << dequeSize << "' штук):\n";
+                    for (int i = 0; i < dequeSize; i++) {
+                        std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
+                        if (i < dq.GetSize()/2) {
+                            is_valid_number(num);
+                            dq.push_front(num);
+                            std::cout << "\n";
+                        }
+                        else {
+                            is_valid_number(num);
+                            dq.push_back(num);
+                            std::cout << "\n";
+                        }
+                    }
+                    std::cout << "\nДОБАВЛЯЕМ 3 ЭЛЕМЕНТА В ДЕК СЛЕВА:\n";
+                    for (int i = 0; i < 3; i++) {
+                        std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
+                        is_valid_number(num);
+                        dq.push_front(num);
+                        std::cout << "\n";
+                    }
+                    std::cout << "\nДОБАВЛЯЕМ 3 ЭЛЕМЕНТА В ДЕК СПРАВА:\n";
+                    for (int i = 0; i < 3; i++) {
+                        std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
+                        is_valid_number(num);
+                        dq.push_back(num);
+                        std::cout << "\n";
+                    }
+                    std::cout << "\nЭЛЕМЕНТЫ ДЕКА СПРАВА (до 1 отрицательного):\n";
+                    bool negativeFound = false;
+                    for (int i = dq.GetSize() - 1; i >= 0; i--) {
+                        std::cout << dq[i] << " ";
+                        dqElementCounter++;
+                        if (dq[i] < 0) {
+                            negativeFound = true;
+                            break;
+                        }
+                    }
+                    if (!negativeFound) {
+                        std::cout << "\nОтрицательных элементов нет!\n";
+                    }
 
-                    hideCursor();
+                    std::cout << "\n\nРАЗМЕР ВСЕГО ДЕКА: " << dq.GetSize() << "\n";
+                    std::cout << "\nРАЗМЕР ОСТАВШЕГОСЯ ДЕКА: " << dq.GetSize()- dqElementCounter << "\n\n";
 
                     system("pause");
                     break;
                 }
                 case lab_returnToMainMenu: {
-                    goto mainMenu;
+                    shouldReturnToMainMenu = true;
+                    break;
                 }
                 case lab_endOfProgram: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
                     return 0;
                 }
+                default:
+                    break;
                 }
             }
+            break;
         }
-        case 4: {// Выход из программы
-            std::cout << "\nВы выбрали: " << mainMenu[choice] << std::endl;
+        case 4: { // Лабораторная работа №5
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
+                int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
+
+                switch (secondaryChoice) {
+                case lab_showTask: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать стек для целых (положительных и отрицательных) чисел. Максимальный размер стека вводится с экрана. Создать функции для ввода, вывода и определения размера стека. Вводить с экрана числа, причем в стек должны добавляться поочередно положительные и отрицательные числа.\n" << std::endl;
+                    system("pause");
+                    break;
+                }
+                case lab_showTaskAndCopmplete: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать стек для целых (положительных и отрицательных) чисел. Максимальный размер стека вводится с экрана. Создать функции для ввода, вывода и определения размера стека. Вводить с экрана числа, причем в стек должны добавляться поочередно положительные и отрицательные числа.\n" << std::endl;
+                    system("pause");
+
+                    bool stackSizeController = false;
+                    unsigned stackSize;
+                    int num;
+                    Stack<int> stk;
+
+                    while (!stackSizeController) {
+                        std::cout << "Введите максимальный размер стека: ";
+                        is_valid_number(stackSize);
+                        std::cout << "\n";
+                        if (stackSize == 0) {
+                            fastErrInfo;
+                        }
+                        else stackSizeController = true;
+                    }
+
+                    std::cout << "Вводите элементы стека (в количестве '" << stackSize << "' штук):\n";
+                    std::cout << "Введите элемент " << stk.GetSize() + 1 << "  : ";
+                    is_valid_number(num);
+                    stk.push_front(num);
+                    std::cout << "\n";
+                    if (stackSize > 1) {
+                        for (int i = 0; i < stackSize - 1; i++) {
+                            if (num > 0) {
+                                std::cout << "Введите отрицательный элемент " << stk.GetSize() + 1 << "  : ";
+                                is_valid_number(num, true);
+                                stk.push_front(num);
+                                std::cout << "\n";
+                            }
+                            else {
+                                std::cout << "Введите положительный элемент " << stk.GetSize() + 1 << "  : ";
+                                is_valid_number(num, false, true);
+                                stk.push_front(num);
+                                std::cout << "\n";
+                            }
+                            num = stk[0];
+                        }
+                    }
+
+                    std::cout << "\nЭЛЕМЕНТЫ ВАШЕГО СТЕКА (в порядке извлечения):\n";
+                    for (int i = 0; i < stk.GetSize(); i++) {
+                        std::cout << stk.GetSize() - i << " - элемент стека: " << stk[i] << "\n";
+                    }
+                    std::cout << "\nРАЗМЕР ВАШЕГО СТЕКА:\n";
+                    std::cout << stk.GetSize() << std::endl;
+                    system("pause");
+                    break;
+                }
+                case lab_returnToMainMenu: {
+                    shouldReturnToMainMenu = true;
+                    break;
+                }
+                case lab_endOfProgram: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    return 0;
+                }
+                default:
+                    break;
+                }
+            }
+            break;
+        }
+        case 5: {// Выход из программы
+            std::cout << "\nВы выбрали: " << mainMenu[mainMenu_choice] << std::endl;
             return 0;
         }
-          mainMenu:;
+        default:
+            break;
         }
     }
+    return 0;
 }
