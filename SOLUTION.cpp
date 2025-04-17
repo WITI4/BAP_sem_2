@@ -8,6 +8,7 @@
 #include "project3.cpp"
 #include "project4.cpp"
 #include "project5.cpp"
+#include "project6.cpp"
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
@@ -45,6 +46,7 @@ int main() {
         "Лабораторная работа №3 - lists",
         "Лабораторная работа №4 - Deque",
         "Лабораторная работа №5 - Stack",
+        "Лабораторная работа №6 - Binary Tree",
         "Выход из программы"
     };
     int mainMenuCount = sizeof(mainMenu) / sizeof(mainMenu[0]);
@@ -479,7 +481,7 @@ int main() {
                     unsigned dequeSize;
                     int num, dqElementCounter = 0;
                     Deque<int> dq;
-                    
+
                     while (!dequeSizeController) {
                         std::cout << "Введите максимальный размер дека: ";
                         is_valid_number(dequeSize);
@@ -493,7 +495,7 @@ int main() {
                     std::cout << "Вводите элементы дека (в количестве '" << dequeSize << "' штук):\n";
                     for (int i = 0; i < dequeSize; i++) {
                         std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
-                        if (i < dq.GetSize()/2) {
+                        if (i < dq.GetSize() / 2) {
                             is_valid_number(num);
                             dq.push_front(num);
                             std::cout << "\n";
@@ -533,7 +535,7 @@ int main() {
                     }
 
                     std::cout << "\n\nРАЗМЕР ВСЕГО ДЕКА: " << dq.GetSize() << "\n";
-                    std::cout << "\nРАЗМЕР ОСТАВШЕГОСЯ ДЕКА: " << dq.GetSize()- dqElementCounter << "\n\n";
+                    std::cout << "\nРАЗМЕР ОСТАВШЕГОСЯ ДЕКА: " << dq.GetSize() - dqElementCounter << "\n\n";
 
                     system("pause");
                     break;
@@ -631,7 +633,71 @@ int main() {
             }
             break;
         }
-        case 5: {// Выход из программы
+        case 5: { // Лабораторная работа №6
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
+                int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
+
+                switch (secondaryChoice) {
+                case lab_showTask: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Дано четное число N (> 0) и набор из N чисел. Создать дерево из N вершин, в котором каждая левая дочерняя вершина является листом, а правая дочерняя вершина является внутренней. Для каждой внутренней вершины в начале создавать левую дочернюю вершину, а затем правую (если 22 она существует); каждой создаваемой вершине присваивать очередное значение из исходного набора. Вывести указатель на корень созданного дерева.\n" << std::endl;
+                    system("pause");
+                    break;
+                }
+                case lab_showTaskAndCopmplete: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Дано четное число N (> 0) и набор из N чисел. Создать дерево из N вершин, в котором каждая левая дочерняя вершина является листом, а правая дочерняя вершина является внутренней. Для каждой внутренней вершины в начале создавать левую дочернюю вершину, а затем правую (если 22 она существует); каждой создаваемой вершине присваивать очередное значение из исходного набора. Вывести указатель на корень созданного дерева.\n" << std::endl;
+                    system("pause");
+
+                    bool BinaryTreeSizeController = false;
+                    unsigned N;
+                    BinaryTree<int> bt;
+
+                    while (!BinaryTreeSizeController) {
+                        std::cout << "Введите количество вершин дерева: ";
+                        is_valid_number(N);
+                        std::cout << "\n";
+                        if (N < 6) {
+                            fastErrInfo;
+                        }
+                        else BinaryTreeSizeController = true;
+                    }
+
+                    int* values = new int[N];
+                    for (int i = 0; i < N; i++) {
+                        std::cout << "Число " << i + 1 << ": ";
+                        is_valid_number(values[i]);
+                        std::cout << "\n";
+                    }
+                    bt.buildFromArray(values, N);
+
+                    std::cout << "\nBinaryTree:\n";
+                    bt.printTree();
+
+                    std::cout << "\nRoot pointer: " << bt.GetRoot() << "\n";
+
+                    delete[] values;
+
+                    system("pause");
+                    break;
+                }
+                case lab_returnToMainMenu: {
+                    shouldReturnToMainMenu = true;
+                    break;
+                }
+                case lab_endOfProgram: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    return 0;
+                }
+                default:
+                    break;
+                }
+            }
+            break;
+        }
+        case 6: {// Выход из программы
             std::cout << "\nВы выбрали: " << mainMenu[mainMenu_choice] << std::endl;
             return 0;
         }
