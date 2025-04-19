@@ -9,6 +9,7 @@
 #include "project4.cpp"
 #include "project5.cpp"
 #include "project6.cpp"
+#include "project7.cpp"
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
@@ -28,25 +29,27 @@ int main() {
     setlocale(0, "ru");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
-
+     
     HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
 
 
-    std::thread timer(inactivity_timer, 60);
+    std::thread timer(inactivity_timer, 100);
     timer.detach();
 
+    enum For_ladNumberSwitch{ lab_1_Scope_of_variable, lab_2_Sort, lab_3_List, lab_4_Deque, lab_5_Stack, lab_6_Binary_tree, lab_7_Hashmap, lab_8_Graph, endOfProgram };
     enum For_SecondaryMenu_Switch { lab_showTask, lab_showTaskAndCopmplete, lab_returnToMainMenu, lab_endOfProgram };
     enum For_mainProject2Menu_Switch { project2_arrInitialization, project2_bubbleSort_a, project2_selectionSort_b, project2_insertionSort_c, project2_shellSort_d, project2_quickSort_e, project2_sequentialSearch, project2_binarySearch, project2_returnToSecondaryMenu, project2_endOfProgram };
-    enum For_mainProject3Menu_Switch { project3_int_list, project3_string_list, project3_returnToSecondaryMenu, project3_endOfProgram };
 
 
-    const std::string mainMenu[]{
-        "Лабораторная работа №1 - scope of variables",
-        "Лабораторная работа №2 - sorts",
-        "Лабораторная работа №3 - lists",
+    const std::string mainMenu[]{ 
+        "Лабораторная работа №1 - Scope of variable",
+        "Лабораторная работа №2 - Sort",
+        "Лабораторная работа №3 - List",
         "Лабораторная работа №4 - Deque",
         "Лабораторная работа №5 - Stack",
         "Лабораторная работа №6 - Binary Tree",
+        "Лабораторная работа №7 - Hashtable",
+        "Лабораторная работа №8 - Graph",
         "Выход из программы"
     };
     int mainMenuCount = sizeof(mainMenu) / sizeof(mainMenu[0]);
@@ -63,7 +66,7 @@ int main() {
         hideCursor();
         int mainMenu_choice = showMenu(".../mainMenu/", mainMenu, mainMenuCount);
         switch (mainMenu_choice) {
-        case 0: { // Лабораторная работа №1
+        case lab_1_Scope_of_variable: {
             bool shouldReturnToMainMenu = false;
 
             while (!shouldReturnToMainMenu) {
@@ -112,7 +115,7 @@ int main() {
             }
             break;
         }
-        case 1: { // Лабораторная работа №2
+        case lab_2_Sort: {
             bool shouldReturnToMainMenu = false;
 
             while (!shouldReturnToMainMenu) {
@@ -399,7 +402,7 @@ int main() {
             }
             break;
         }
-        case 2: { // Лабораторная работа №3
+        case lab_3_List: {
             bool shouldReturnToMainMenu = false;
 
             while (!shouldReturnToMainMenu) {
@@ -459,7 +462,7 @@ int main() {
             }
             break;
         }
-        case 3: { // Лабораторная работа №4
+        case lab_4_Deque: {
             bool shouldReturnToMainMenu = false;
 
             while (!shouldReturnToMainMenu) {
@@ -491,6 +494,9 @@ int main() {
                         }
                         else dequeSizeController = true;
                     }
+
+                    int b;
+                    is_valid_number(b);
 
                     std::cout << "Вводите элементы дека (в количестве '" << dequeSize << "' штук):\n";
                     for (int i = 0; i < dequeSize; i++) {
@@ -554,7 +560,7 @@ int main() {
             }
             break;
         }
-        case 4: { // Лабораторная работа №5
+        case lab_5_Stack: {
             bool shouldReturnToMainMenu = false;
 
             while (!shouldReturnToMainMenu) {
@@ -633,7 +639,7 @@ int main() {
             }
             break;
         }
-        case 5: { // Лабораторная работа №6
+        case lab_6_Binary_tree: {
             bool shouldReturnToMainMenu = false;
 
             while (!shouldReturnToMainMenu) {
@@ -697,7 +703,109 @@ int main() {
             }
             break;
         }
-        case 6: {// Выход из программы
+        case lab_7_Hashmap: {
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
+                int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
+
+                switch (secondaryChoice) {
+                case lab_showTask: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
+                    system("pause");
+                    break;
+                }
+                case lab_showTaskAndCopmplete: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
+                    system("pause");
+                    
+                    bool hashLenghtController = false;
+                    bool EndFlag = false;
+                    unsigned hashLength;
+                    HashTable ht;
+                    std::string str;
+
+                    std::cout << "Вводите города (для завершения введите 'end'):\n";
+                    while (!EndFlag) {
+                        std::cout << "Город " << ht.GetSize() + 1 << "  : ";
+                        filteredInput_letter_numbers(str, 1);
+                        ht.insert(str);
+                        if (str == "end") {
+                            EndFlag = true;
+                        }
+                    }
+                    while (!hashLenghtController) {
+                        std::cout << "\nВВЕДИТЕ КОЛИЧЕСТВО СИМВОЛОВ В ГЕНЕРИРУЕМОМ ХЭШЕ (МИНИМУМ 4 - МАКСИМУМ 16): ";
+                        is_valid_number(hashLength);
+                        std::cout << "\n";
+                        if (hashLength < 4 || hashLength > 17) {
+                            fastErrInfo;
+                        }
+                        else hashLenghtController = true;
+                    }
+
+                    std::cout << "\n";
+                    ht.printCitiesList();
+                    ht.printHashes(hashLength);
+                    ht.removeCitiesWithO();
+
+                    system("pause");
+                    break;
+                }
+                case lab_returnToMainMenu: {
+                    shouldReturnToMainMenu = true;
+                    break;
+                }
+                case lab_endOfProgram: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    return 0;
+                }
+                default:
+                    break;
+                }
+            }
+            break;
+        }
+        case lab_8_Graph: {
+            bool shouldReturnToMainMenu = false;
+
+            while (!shouldReturnToMainMenu) {
+                int secondaryChoice = showMenu(".../mainMenu/secondaryMenu/", secondaryMenu, secondaryMenuCount);
+
+                switch (secondaryChoice) {
+                case lab_showTask: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
+                    system("pause");
+                    break;
+                }
+                case lab_showTaskAndCopmplete: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
+                    system("pause");
+
+
+
+                    system("pause");
+                    break;
+                }
+                case lab_returnToMainMenu: {
+                    shouldReturnToMainMenu = true;
+                    break;
+                }
+                case lab_endOfProgram: {
+                    std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
+                    return 0;
+                }
+                default:
+                    break;
+                }
+            }
+            break;
+        }
+        case endOfProgram: {
             std::cout << "\nВы выбрали: " << mainMenu[mainMenu_choice] << std::endl;
             return 0;
         }

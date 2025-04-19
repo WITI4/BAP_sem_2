@@ -83,22 +83,29 @@ bool englishAlnum_imput(const std::string& s) {
     char c = s[0];
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (c == '-') || (c == '_') || (c == '.');
 }
+bool only_englishAlnum_imput(const std::string& s) {
+    if (s.empty()) return false;
+    char c = s[0];
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
 
-void filteredInput_letter_numbers(std::string& s, bool maskInput) {
+void filteredInput_letter_numbers(std::string& s, bool onlyEnglish) {
     s.clear();
 
     while (true) {
         int c = _getch();
-        std::string charAsString(1, (char)c);
+        std::string charAsString(1, char(c));
 
         if (c == 0 || c == 0xE0) {
             _getch();
-            continue;
         }
 
-        if (englishAlnum_imput(charAsString) && s.size() < MAX_DIGITS) {
-            s += (char)c;
-            std::cout << (maskInput ? '*' : (char)c);
+        bool isValid = onlyEnglish ? only_englishAlnum_imput(charAsString)
+            : englishAlnum_imput(charAsString);
+
+        if (isValid && s.size() < MAX_DIGITS) {
+            s += char(c);
+            std::cout << char(c);
         }
 
         if (c == BACKSPACE && !s.empty()) {

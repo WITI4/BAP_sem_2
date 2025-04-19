@@ -17,8 +17,9 @@ bool check_onlyNegative_int_input(const std::string& s);
 bool check_onlyPositive_int_input(const std::string& s);
 bool check_double_float_input(const std::string& s);
 bool englishAlnum_imput(const std::string& s);
+bool only_englishAlnum_imput(const std::string& s);
 
-void filteredInput_letter_numbers(std::string& s, bool maskInput = false);
+void filteredInput_letter_numbers(std::string& s, bool onlyEnglish = false);
 
 template <typename T>
 bool is_valid_number(T& num, bool requireNegative = false, bool requirePositive = false) {

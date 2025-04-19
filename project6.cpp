@@ -1,10 +1,10 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <iomanip>
 
 template<typename T>
 class BinaryTree {
-private:
-    struct Node {
+    class Node {
+    public:
         T key;
         Node* left;
         Node* right;
@@ -74,14 +74,14 @@ public:
 
     void printTree() const {
         if (!root) return;
-        std::cout << "      " << root->key << " (âåòâü)\n";
+        std::cout << "      " << root->key << " (ÐºÐ¾Ñ€ÐµÐ½ÑŒ)\n";
         std::cout << "       /   \\\n";
-        std::cout << "      " << root->left->key << "    " << root->right->key << " (âåòâü)\n";
-        std::cout << "   (ëèñò) /   \\\n";
-        std::cout << "         " << root->right->left->key << "    " << root->right->right->key << " (âåòâü)\n";
-        std::cout << "      (ëèñò) /   \\\n";
+        std::cout << "      " << root->left->key << "    " << root->right->key << " (ÑƒÐ·ÐµÐ»)\n";
+        std::cout << "   (Ð»Ð¸ÑÑ‚) /   \\\n";
+        std::cout << "         " << root->right->left->key << "    " << root->right->right->key << " (ÑƒÐ·ÐµÐ»)\n";
+        std::cout << "      (Ð»Ð¸ÑÑ‚) /   \\\n";
         std::cout << "            " << root->right->right->left->key << "    ....\n";
-        std::cout << "         (ëèñò)\n";
+        std::cout << "         (Ð»Ð¸ÑÑ‚)\n";
     }
 
 };
