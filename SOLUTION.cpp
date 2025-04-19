@@ -25,12 +25,12 @@ std::cout << "Некорректный ввод. Введите информац
 SetConsoleTextAttribute(consoleColor, 7); 
 //#define DEBUG
 
-int main() {
-    setlocale(0, "ru");
+int main() { 
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
      
     HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
+
 
 
     std::thread timer(inactivity_timer, 100);
@@ -426,7 +426,7 @@ int main() {
 
                     while (!EndFlag) {
                         std::cout << "Элемент " << lst.GetSize() + 1 << "  : ";
-                        filteredInput_letter_numbers(str);
+                        letter_filteredInput<std::string>(str);
                         lst.push_back(str);
                         if (str == "end") {
                             EndFlag = true;
@@ -487,7 +487,7 @@ int main() {
 
                     while (!dequeSizeController) {
                         std::cout << "Введите максимальный размер дека: ";
-                        is_valid_number(dequeSize);
+                        number_filteredInput<unsigned>(dequeSize);
                         std::cout << "\n";
                         if (dequeSize == 0) {
                             fastErrInfo;
@@ -495,19 +495,16 @@ int main() {
                         else dequeSizeController = true;
                     }
 
-                    int b;
-                    is_valid_number(b);
-
                     std::cout << "Вводите элементы дека (в количестве '" << dequeSize << "' штук):\n";
                     for (int i = 0; i < dequeSize; i++) {
                         std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
                         if (i < dq.GetSize() / 2) {
-                            is_valid_number(num);
+                            number_filteredInput<int>(num);
                             dq.push_front(num);
                             std::cout << "\n";
                         }
                         else {
-                            is_valid_number(num);
+                            number_filteredInput<int>(num);
                             dq.push_back(num);
                             std::cout << "\n";
                         }
@@ -515,14 +512,14 @@ int main() {
                     std::cout << "\nДОБАВЛЯЕМ 3 ЭЛЕМЕНТА В ДЕК СЛЕВА:\n";
                     for (int i = 0; i < 3; i++) {
                         std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
-                        is_valid_number(num);
+                        number_filteredInput<int>(num);
                         dq.push_front(num);
                         std::cout << "\n";
                     }
                     std::cout << "\nДОБАВЛЯЕМ 3 ЭЛЕМЕНТА В ДЕК СПРАВА:\n";
                     for (int i = 0; i < 3; i++) {
                         std::cout << "Введите элемент " << dq.GetSize() + 1 << "  : ";
-                        is_valid_number(num);
+                        number_filteredInput<int>(num);
                         dq.push_back(num);
                         std::cout << "\n";
                     }
@@ -585,7 +582,7 @@ int main() {
 
                     while (!stackSizeController) {
                         std::cout << "Введите максимальный размер стека: ";
-                        is_valid_number(stackSize);
+                        number_filteredInput<unsigned>(stackSize);
                         std::cout << "\n";
                         if (stackSize == 0) {
                             fastErrInfo;
@@ -595,20 +592,20 @@ int main() {
 
                     std::cout << "Вводите элементы стека (в количестве '" << stackSize << "' штук):\n";
                     std::cout << "Введите элемент " << stk.GetSize() + 1 << "  : ";
-                    is_valid_number(num);
+                    number_filteredInput<int>(num);
                     stk.push_front(num);
                     std::cout << "\n";
                     if (stackSize > 1) {
                         for (int i = 0; i < stackSize - 1; i++) {
                             if (num > 0) {
                                 std::cout << "Введите отрицательный элемент " << stk.GetSize() + 1 << "  : ";
-                                is_valid_number(num, true);
+                                number_filteredInput<int>(num, true);
                                 stk.push_front(num);
                                 std::cout << "\n";
                             }
                             else {
                                 std::cout << "Введите положительный элемент " << stk.GetSize() + 1 << "  : ";
-                                is_valid_number(num, false, true);
+                                number_filteredInput<int>(num, false, true);
                                 stk.push_front(num);
                                 std::cout << "\n";
                             }
@@ -663,7 +660,7 @@ int main() {
 
                     while (!BinaryTreeSizeController) {
                         std::cout << "Введите количество вершин дерева: ";
-                        is_valid_number(N);
+                        number_filteredInput<unsigned>(N);
                         std::cout << "\n";
                         if (N < 6) {
                             fastErrInfo;
@@ -674,7 +671,7 @@ int main() {
                     int* values = new int[N];
                     for (int i = 0; i < N; i++) {
                         std::cout << "Число " << i + 1 << ": ";
-                        is_valid_number(values[i]);
+                        number_filteredInput<int>(values[i]);
                         std::cout << "\n";
                     }
                     bt.buildFromArray(values, N);
@@ -730,7 +727,7 @@ int main() {
                     std::cout << "Вводите города (для завершения введите 'end'):\n";
                     while (!EndFlag) {
                         std::cout << "Город " << ht.GetSize() + 1 << "  : ";
-                        filteredInput_letter_numbers(str, 1);
+                        letter_filteredInput<std::string>(str, 1);
                         ht.insert(str);
                         if (str == "end") {
                             EndFlag = true;
@@ -738,7 +735,7 @@ int main() {
                     }
                     while (!hashLenghtController) {
                         std::cout << "\nВВЕДИТЕ КОЛИЧЕСТВО СИМВОЛОВ В ГЕНЕРИРУЕМОМ ХЭШЕ (МИНИМУМ 4 - МАКСИМУМ 16): ";
-                        is_valid_number(hashLength);
+                        number_filteredInput(hashLength);
                         std::cout << "\n";
                         if (hashLength < 4 || hashLength > 17) {
                             fastErrInfo;
