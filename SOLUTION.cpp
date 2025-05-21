@@ -10,6 +10,7 @@
 #include "project5.cpp"
 #include "project6.cpp"
 #include "project7.cpp"
+#include "project8.cpp"
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
@@ -152,7 +153,8 @@ int main() {
                     bool open_binary_c = 0;
                     bool open_binary_d = 0;
                     bool open_binary_e = 0;
-                    int size = 0;
+                    unsigned size = 0;
+                    bool errFlag = false;
                     int* a = nullptr;
                     int* b = nullptr;
                     int* c = nullptr;
@@ -171,11 +173,11 @@ int main() {
                             showCursor();
 
                             std::cout << "\n\nВведите количество элементов в массиве : ";
-                            while (!(std::cin >> size) || size < 1 || std::cin.peek() != '\n') {
-                                fastErrInfo;
-                                std::cin.clear();
-                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                            while (!errFlag) {
+                                number_filteredInput<unsigned>(size);
+                                size != 0 ? errFlag = true : fastErrInfo;
                             }
+                            errFlag = false;
 
                             hideCursor();
 
@@ -195,6 +197,7 @@ int main() {
                             std::cout << "\nМассивы инициализированы случайными числами:\n" << std::endl;
                             outputArray(a, b, c, d, e, size);
                             writeInitializedArraysToFile("results.txt", a, b, c, d, e, size);
+                            system("pause");
                             break;
                         }
                         case project2_bubbleSort_a: {
@@ -202,21 +205,25 @@ int main() {
 
                             if (!a) {
                                 std::cout << "\nСначала выполните инициализацию!\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             if (size < 2) {
                                 std::cout << "\nСлишком мало элементов для сортировки!\n" << std::endl;
                                 open_binary_a = 0;
+                                system("pause");
                                 break;
                             }
                             else {
                                 std::cout << "\nИсходный массив:\n";
-                                outputTempArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
-                                bubbleSort(a, size);
+                                outputTempArray(a, b, c, d, e, size);
+                                bubbleSort(a_temp, size);
                                 std::cout << "\nМассив a отсортирован методом пузырька:\n" << std::endl;
-                                outputArray(a, b, c, d, e, size);
+                                outputArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
                                 open_binary_a = 1;
-                                writeSortedArraysToFile("results.txt", a, b, c, d, e, size, "Массив a отсортирован методом пузырька");
+                                writeSortedArraysToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, "Массив a отсортирован методом пузырька");
+                                std::cout << "\n";
+                                system("pause");
                                 break;
                             }
                         }
@@ -225,21 +232,25 @@ int main() {
 
                             if (!b) {
                                 std::cout << "\nСначала выполните инициализацию!\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             if (size < 2) {
                                 std::cout << "\nСлишком мало элементов для сортировки!\n" << std::endl;
+                                system("pause");
                                 break;
                                 open_binary_b = 0;
                             }
                             else {
                                 std::cout << "\nИсходный массив:\n";
-                                outputTempArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
-                                selectionSort(b, size);
+                                outputTempArray(a, b, c, d, e, size);
+                                selectionSort(b_temp, size);
                                 std::cout << "\nМассив b отсортирован методом выбора:\n" << std::endl;
-                                outputArray(a, b, c, d, e, size);
+                                outputArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
                                 open_binary_b = 1;
-                                writeSortedArraysToFile("results.txt", a, b, c, d, e, size, "Массив b отсортирован методом выбора");
+                                writeSortedArraysToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, "Массив b отсортирован методом выбора");
+                                std::cout << "\n";
+                                system("pause");
                                 break;
                             }
                         }
@@ -248,21 +259,25 @@ int main() {
 
                             if (!c) {
                                 std::cout << "\nСначала выполните инициализацию\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             if (size < 2) {
                                 std::cout << "\nСлишком мало элементов для сортировки!\n" << std::endl;
+                                system("pause");
                                 open_binary_c = 0;
                                 break;
                             }
                             else {
                                 std::cout << "\nИсходный массив:\n";
-                                outputTempArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
-                                insertionSort(c, size);
+                                outputTempArray(a, b, c, d, e, size);
+                                insertionSort(c_temp, size);
                                 std::cout << "\nМассив c отсортирован методом вставки:\n" << std::endl;
-                                outputArray(a, b, c, d, e, size);
+                                outputArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
                                 open_binary_c = 1;
-                                writeSortedArraysToFile("results.txt", a, b, c, d, e, size, "Массив c отсортирован методом вставки");
+                                writeSortedArraysToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, "Массив c отсортирован методом вставки");
+                                std::cout << "\n";
+                                system("pause");
                                 break;
                             }
                         }
@@ -271,21 +286,25 @@ int main() {
 
                             if (!d) {
                                 std::cout << "\nСначала выполните инициализацию!\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             if (size < 2) {
                                 std::cout << "\nСлишком мало элементов для сортировки!\n" << std::endl;
+                                system("pause");
                                 open_binary_d = 0;
                                 break;
                             }
                             else {
                                 std::cout << "\nИсходный массив:\n";
-                                outputTempArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
-                                shellSort(d, size);
+                                outputTempArray(a, b, c, d, e, size);
+                                shellSort(d_temp, size);
                                 std::cout << "\nМассив d отсортирован методом Шелла:\n" << std::endl;
-                                outputArray(a, b, c, d, e, size);
+                                outputArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
                                 open_binary_d = 1;
-                                writeSortedArraysToFile("results.txt", a, b, c, d, e, size, "Массив d отсортирован методом Шелла");
+                                writeSortedArraysToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, "Массив d отсортирован методом Шелла");
+                                std::cout << "\n";
+                                system("pause");
                                 break;
                             }
                         }
@@ -294,21 +313,25 @@ int main() {
 
                             if (!e) {
                                 std::cout << "\nСначала выполните инициализацию!\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             if (size < 2) {
                                 std::cout << "\nСлишком мало элементов для сортировки!\n" << std::endl;
+                                system("pause");
                                 open_binary_e = 0;
                                 break;
                             }
                             else {
                                 std::cout << "\nИсходный массив: \n";
-                                outputTempArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
-                                quickSort(e, 0, size - 1);
+                                outputTempArray(a, b, c, d, e, size);
+                                quickSort(e_temp, 0, size - 1);
                                 std::cout << "\nМассив e отсортирован методом Хоара:\n" << std::endl;
-                                outputArray(a, b, c, d, e, size);
+                                outputArray(a_temp, b_temp, c_temp, d_temp, e_temp, size);
                                 open_binary_e = 1;
-                                writeSortedArraysToFile("results.txt", a, b, c, d, e, size, "Массив e отсортирован методом Хоара");
+                                writeSortedArraysToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, "Массив e отсортирован методом Хоара");
+                                std::cout << "\n";
+                                system("pause");
                                 break;
                             }
                         }
@@ -317,21 +340,19 @@ int main() {
 
                             if (!a && !b && !c && !d && !e) {
                                 std::cout << "\nСначала выполните инициализацию!\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             int x;
                             std::cout << "Введите элемент для поиска: ";
-                            while (!(std::cin >> x) || std::cin.peek() != '\n') {
-                                fastErrInfo;
-                                std::cin.clear();
-                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                            }
+                            number_filteredInput<int>(x);
+
                             int seqResults[5] = {
-                                sequentialSearch(a_temp, size, x),
-                                sequentialSearch(b_temp, size, x),
-                                sequentialSearch(c_temp, size, x),
-                                sequentialSearch(d_temp, size, x),
-                                sequentialSearch(e_temp, size, x)
+                                sequentialSearch(a, size, x),
+                                sequentialSearch(b, size, x),
+                                sequentialSearch(c, size, x),
+                                sequentialSearch(d, size, x),
+                                sequentialSearch(e, size, x)
                             };
                             std::cout << "\nРезультаты последовательного поиска:\n\n" << std::endl;
                             std::cout << "Массив a: " << seqResults[0] << " вхождений" << std::endl;
@@ -340,7 +361,9 @@ int main() {
                             std::cout << "Массив d: " << seqResults[3] << " вхождений" << std::endl;
                             std::cout << "Массив e: " << seqResults[4] << " вхождений" << std::endl;
 
-                            writeSequentialSearchResultsToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, x, seqResults);
+                            writeSequentialSearchResultsToFile("results.txt", a, b, c, d, e, size, x, seqResults);
+                            std::cout << "\n";
+                            system("pause");
                             break;
                         }
                         case project2_binarySearch: {
@@ -348,21 +371,19 @@ int main() {
 
                             if (!a && !b && !c && !d && !e || size < 2 || (open_binary_a == 0 && open_binary_b == 0 && open_binary_c == 0 && open_binary_d == 0 && open_binary_e == 0)) {
                                 std::cout << "\nСначала выполните инициализацию и сортировку (минимум одного массива)!\n" << std::endl;
+                                system("pause");
                                 break;
                             }
                             int x;
                             std::cout << "Введите элемент для поиска: ";
-                            while (!(std::cin >> x) || std::cin.peek() != '\n') {
-                                fastErrInfo;
-                                std::cin.clear();
-                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                            }
+                            number_filteredInput<int>(x);
+
                             bool binaryResults[5] = {
-                                open_binary_a && binarySearch(a, 0, size - 1, x) != -1,
-                                open_binary_b && binarySearch(b, 0, size - 1, x) != -1,
-                                open_binary_c && binarySearch(c, 0, size - 1, x) != -1,
-                                open_binary_d && binarySearch(d, 0, size - 1, x) != -1,
-                                open_binary_e && binarySearch(e, 0, size - 1, x) != -1
+                                open_binary_a && binarySearch(a_temp, 0, size - 1, x) != -1,
+                                open_binary_b && binarySearch(b_temp, 0, size - 1, x) != -1,
+                                open_binary_c && binarySearch(c_temp, 0, size - 1, x) != -1,
+                                open_binary_d && binarySearch(d_temp, 0, size - 1, x) != -1,
+                                open_binary_e && binarySearch(e_temp, 0, size - 1, x) != -1
                             };
                             std::cout << "\nРезультаты бинарного поиска:\n\n" << std::endl;
                             if (open_binary_a == 1) std::cout << "Массив a: " << (binaryResults[0] ? "Найден" : "Не найден") << std::endl;
@@ -371,7 +392,9 @@ int main() {
                             if (open_binary_d == 1) std::cout << "Массив d: " << (binaryResults[3] ? "Найден" : "Не найден") << std::endl;
                             if (open_binary_e == 1) std::cout << "Массив e: " << (binaryResults[4] ? "Найден" : "Не найден") << std::endl;
 
-                            writeBinarySearchResultsToFile("results.txt", a, b, c, d, e, size, x, binaryResults);
+                            writeBinarySearchResultsToFile("results.txt", a_temp, b_temp, c_temp, d_temp, e_temp, size, x, binaryResults);
+                            std::cout << "\n";
+                            system("pause");
                             break;
                         }
                         case project2_returnToSecondaryMenu: {
@@ -718,35 +741,45 @@ int main() {
                     std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
                     system("pause");
                     
-                    bool hashLenghtController = false;
-                    bool EndFlag = false;
-                    unsigned hashLength;
-                    HashTable ht;
-                    std::string str;
+                    unsigned methodInput;
+                    Method methodChoice = Division;
+                    bool ErrFlag = false;
 
-                    std::cout << "Вводите города (для завершения введите 'end'):\n";
-                    while (!EndFlag) {
-                        std::cout << "Город " << ht.GetSize() + 1 << "  : ";
-                        letter_filteredInput<std::string>(str, 1);
-                        ht.insert(str);
-                        if (str == "end") {
-                            EndFlag = true;
+                    std::cout << "Выберите метод хеширования:\n";
+                    std::cout << "1. Деление\n2. Умножение\n3. Универсальный\n> ";
+
+                    while (!ErrFlag) {
+                        number_filteredInput<unsigned>(methodInput);
+                        if (methodInput <= 3 && methodInput != 0) {
+                            ErrFlag = true;
                         }
-                    }
-                    while (!hashLenghtController) {
-                        std::cout << "\nВВЕДИТЕ КОЛИЧЕСТВО СИМВОЛОВ В ГЕНЕРИРУЕМОМ ХЭШЕ (МИНИМУМ 4 - МАКСИМУМ 16): ";
-                        number_filteredInput(hashLength);
-                        std::cout << "\n";
-                        if (hashLength < 4 || hashLength > 17) {
+                        else {
                             fastErrInfo;
                         }
-                        else hashLenghtController = true;
                     }
 
-                    std::cout << "\n";
+                    if (methodInput == 1) methodChoice = Division;
+                    else if (methodInput == 2) methodChoice = Multiplication;
+                    else if (methodInput == 3) methodChoice = Universal;
+
+                    HashTable ht(methodChoice);
+                    std::string str;
+                    bool EndFlag = false;
+
+                    std::cout << "\nВводите города (для завершения введите 'end'):\n";
+                    while (!EndFlag) {
+                        std::cout << "Город " << ht.GetSize() + 1 << ": ";
+                        letter_filteredInput<std::string>(str);
+                        ht.insert(str);
+                        if (str == "end") EndFlag = true;
+                    }
+
                     ht.printCitiesList();
-                    ht.printHashes(hashLength);
+                    ht.printHashes();
+                    ht.printHashTable(true);
+
                     ht.removeCitiesWithO();
+                    ht.printHashTable(false);
 
                     system("pause");
                     break;
@@ -774,16 +807,40 @@ int main() {
                 switch (secondaryChoice) {
                 case lab_showTask: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
-                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Построить граф, согласно схеме. Построить матрицу смежности для данного графа. По запросу пользователя выполнить действия: удалить вершину; найти все вершины, лежащие на кратчайшем пути между заданными вершинами; вывести на экран результирующий граф.\nДополнительное задание : удалить вершину 1, найти вершины между вершинами 5 и 3.\n" << std::endl;
                     system("pause");
                     break;
                 }
                 case lab_showTaskAndCopmplete: {
                     std::cout << "\nВы выбрали: " << secondaryMenu[secondaryChoice] << std::endl;
-                    std::cout << "\nНЕОБХОДИМО:\n\n19. Создать хеш-таблицу для хранения информации о городах с ключами (названиями) и удалить из нее все города, название которых содержит букву 'о'.\n" << std::endl;
+                    std::cout << "\nНЕОБХОДИМО:\n\n19. Построить граф, согласно схеме. Построить матрицу смежности для данного графа. По запросу пользователя выполнить действия: удалить вершину; найти все вершины, лежащие на кратчайшем пути между заданными вершинами; вывести на экран результирующий граф.\nДополнительное задание : удалить вершину 1, найти вершины между вершинами 5 и 3.\n" << std::endl;
                     system("pause");
 
+                        Graph g(5);
 
+                        g.addEdge(0, 1);
+                        g.addEdge(0, 2);
+                        g.addEdge(0, 3);
+                        g.addEdge(1, 4);
+                        g.addEdge(3, 4);
+                        g.addEdge(2, 3);
+
+                        g.printAdjMatrix();
+                        g.removeVertex(0);
+
+                        std::cout << "\nМатрица смежности после удаления вершины 1:\n";
+                        g.printAdjMatrix();
+
+                        std::vector<int> path = g.shortestPath(3, 1);
+
+                        std::cout << "\nКратчайший путь между вершинами 5 и 3 (с учетом удаления вершины 1):\n";
+                        for (int v : path) {
+                            std::cout << (v + 2) << " ";
+                        }
+                        std::cout << "\n";
+
+                        std::cout << "\nРезультирующий граф после удаления вершины 1:\n";
+                        g.printGraph();
 
                     system("pause");
                     break;
